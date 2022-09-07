@@ -100,7 +100,7 @@ ssize_t _getline(char **lineptr, size_t *n, FILE *stream)
 	static ssize_t input;
 	ssize_t ret;
 	char c = 'x', *buffer;
-	int r;
+	int r, bufsize = 0;
 
 	if (input == 0)
 		fflush(stream);
@@ -126,8 +126,11 @@ ssize_t _getline(char **lineptr, size_t *n, FILE *stream)
 			break;
 		}
 
-		if (input >= 120)
-			buffer = _realloc(buffer, input, input + 1);
+		if (input >= bufsize)
+		{
+			buffer = _realloc(buffer, input, input + 120);
+			bufsize += 120;
+		}
 
 		buffer[input] = c;
 		input++;
